@@ -53,11 +53,9 @@
           // @ts-ignore
           let words = JSON.parse(reader.result)[wordLength]
           word = words[Math.floor(Math.random()*words.length)]
-          console.log(word)
         }
         break;
     }
-    console.log(word)
   }
 
   document.body.addEventListener("keydown", (e)=>{
