@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-    .alternateMode{
+    .darkMode{
         @apply bg-black text-white border-white;
     }
     div{

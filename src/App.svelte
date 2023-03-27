@@ -12,7 +12,7 @@
   let sunkLetters = [];
   let missedLetters = [];
   let files;
-  let alternateTheme = false;
+  let darkMode = false;
   let contrastMode = false;
   let wordChecking = true;
   let rows = [];
@@ -178,18 +178,20 @@
   }
 </script>
 
-<div class="flex flex-col items-center w-full h-screen" class:alternateMode="{alternateTheme}">
+<div class="flex flex-col items-center w-full h-screen" class:darkMode="{darkMode}">
   {#if word == ""}
     <div>
-      <select bind:value={wordLength} class:alternateMode="{alternateTheme}">
+      <select bind:value={wordLength} class:darkMode="{darkMode}">
         {#each wordLengths as i}
           <option value="{i}">{i}</option>
         {/each}
       </select>
-      <select bind:value={wordSrc} class:alternateMode="{alternateTheme}">
+      |
+      <select bind:value={wordSrc} class:darkMode="{darkMode}">
         <option value="API">API</option>
         <option value="JSON">JSON</option>
       </select>
+      |
       {#if wordSrc == "JSON"}
         <label for="jsonFile">Select JSON file:</label>
         <input type="file" id="jsonFile" name="jsonFile" accept="application/json" bind:files={files}>
@@ -197,12 +199,14 @@
         <label for="checkingCb">Check words</label>
         <input type="checkbox" name="checkingCb" id="checkingCb" bind:checked="{wordChecking}">
       {/if}
-      <label for="themeCb">Alternate theme</label>
-      <input type="checkbox" name="themeCb" id="themeCb" bind:checked="{alternateTheme}">
+      |
+      <label for="themeCb">Dark mode</label>
+      <input type="checkbox" name="themeCb" id="themeCb" bind:checked="{darkMode}">
+      |
       <label for="contrastCb">Contrast mode</label>
       <input type="checkbox" name="contrastCb" id="contrastCb" bind:checked="{contrastMode}">
-      <button on:click={startGame}>Start</button>
     </div>
+    <button class="border-solid border-2 p-3 pt-1 pb-1 m-2" class:darkMode="{darkMode}" on:click={startGame}>Start</button>
   {:else}
     {#await properWords then properWords}
       <div class="flex flex-col justify-center">
@@ -216,43 +220,43 @@
                     class:bg-gray-500="{(tries[i][tries[i].length - 1] == "." && (!word.includes(j) || !letterProperlyHit(i, index)))}"
                     class:bg-orange-600="{(tries[i][tries[i].length - 1] == "." && word[index] == j && contrastMode)}"
                     class:bg-blue-400="{(tries[i][tries[i].length - 1] == "." && word[index] != j && letterProperlyHit(i, index) && contrastMode)}"
-                    class:alternateMode="{alternateTheme}">
+                    class:darkMode="{darkMode}">
                     {j.toUpperCase()}
                   </div>
                 {/each}
                 {#each Array(wordLength - tries[i].replace(".", "").length) as j}
-                  <div class="border-solid border-2 h-14 w-14 m-1 items-center justify-center flex text-xl" class:alternateMode="{alternateTheme}"></div>
+                  <div class="border-solid border-2 h-14 w-14 m-1 items-center justify-center flex text-xl" class:darkMode="{darkMode}"></div>
                 {/each}
               {:else}
                 {#each word as j}
-                  <div class="border-solid border-2 h-14 w-14 m-1 items-center justify-center flex text-xl" class:alternateMode="{alternateTheme}"></div>
+                  <div class="border-solid border-2 h-14 w-14 m-1 items-center justify-center flex text-xl" class:darkMode="{darkMode}"></div>
                 {/each}
               {/if}
             </div>    
         {/each}
       </div>
       <br>
-      <button class="flex flex-col justify-center m-5 border-solid border-2" on:click={showHint}>Use hint</button>
+      <button class="flex flex-col justify-center m-5 p-2 border-solid border-2" on:click={showHint}>Use hint</button>
       <div>
         {#each keyboardLetters as keyboardRow}
           <div class="flex flex-row justify-center">
             {#each keyboardRow as letter}
               {#if letter.length == 1}
-                <div on:click={()=>{addLetter(letter)}} class="border-solid border-2 h-14 w-10 m-1 items-center justify-center flex text-xl" 
+                <button on:click={()=>{addLetter(letter)}} class="border-solid border-2 h-14 w-10 m-1 items-center justify-center flex text-xl" 
                   class:bg-lime-600="{sunkLetters.includes(letter) && !contrastMode}"
                   class:bg-yellow-400="{hitLetters.includes(letter) && !contrastMode}"
                   class:bg-gray-500="{missedLetters.includes(letter)}"
                   class:bg-orange-600="{sunkLetters.includes(letter) && contrastMode}"
                   class:bg-blue-400="{hitLetters.includes(letter) && contrastMode}"
-                  class:alternateMode="{alternateTheme}">   
+                  class:darkMode="{darkMode}">   
                   {letter.toUpperCase()}
-                </div>
+                </button>
               {:else if letter == "ENTER"}
-                <div on:click={approveTry} class="border-solid border-2 h-14 w-20 m-1 items-center justify-center flex text-xl" class:alternateMode="{alternateTheme}">ENTER</div>
+                <button on:click={approveTry} class="border-solid border-2 h-14 w-20 m-1 items-center justify-center flex text-xl" class:darkMode="{darkMode}">ENTER</button>
               {:else}
-                <div on:click={deleteLetter} class="border-solid border-2 h-14 w-20 m-1 p-4 items-center justify-center flex text-xl" class:alternateMode="{alternateTheme}">
-                  <img src="{alternateTheme ? 'src/assets/alternateBackspace.png' : 'src/assets/backspace.png'}" alt="backspace">
-                </div>
+                <button on:click={deleteLetter} class="border-solid border-2 h-14 w-20 m-1 p-4 items-center justify-center flex text-xl" class:darkMode="{darkMode}">
+                  <img src="{darkMode ? 'src/assets/alternateBackspace.png' : 'src/assets/backspace.png'}" alt="backspace">
+                </button>
               {/if}
             {/each}
           </div>
